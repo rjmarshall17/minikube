@@ -1,0 +1,197 @@
+These are the commands that I have run:
+
+# Run a test container image that includes a webserver
+kubectl create deployment hello-node --image=registry.k8s.io/e2e-test-images/agnhost:2.53 -- /agnhost netexec --http-port=8080
+
+rob@rjmmx01:~$ kubectl create deployment hello-node --image=registry.k8s.io/e2e-test-images/agnhost:2.53 -- /agnhost netexec --http-port=8080
+deployment.apps/hello-node created
+
+rob@rjmmx01:~$ kubectl get deploy
+NAME         READY   UP-TO-DATE   AVAILABLE   AGE
+hello-node   1/1     1            1           35s
+webserver    3/3     3            3           6d
+
+rob@rjmmx01:~$ kubectl describe deployment webserver
+Name:                   webserver
+Namespace:              default
+CreationTimestamp:      Thu, 02 Apr 2026 10:48:02 -0400
+Labels:                 app=webserver
+Annotations:            deployment.kubernetes.io/revision: 1
+Selector:               app=webserver
+Replicas:               3 desired | 3 updated | 3 total | 3 available | 0 unavailable
+StrategyType:           RollingUpdate
+MinReadySeconds:        0
+RollingUpdateStrategy:  25% max unavailable, 25% max surge
+Pod Template:
+  Labels:  app=webserver
+  Containers:
+   nginx:
+    Image:         nginx:alpine
+    Port:          80/TCP
+    Host Port:     0/TCP
+    Environment:   <none>
+    Mounts:        <none>
+  Volumes:         <none>
+  Node-Selectors:  <none>
+  Tolerations:     <none>
+Conditions:
+  Type           Status  Reason
+  ----           ------  ------
+  Progressing    True    NewReplicaSetAvailable
+  Available      True    MinimumReplicasAvailable
+OldReplicaSets:  <none>
+NewReplicaSet:   webserver-684bc54f86 (3/3 replicas created)
+Events:          <none>
+
+
+rob@rjmmx01:~$ kubectl get po
+NAME                         READY   STATUS    RESTARTS        AGE
+hello-node-64fc5894d-zn85g   1/1     Running   0               3m42s
+webserver-684bc54f86-flwz2   1/1     Running   2 (6m2s ago)    6d
+webserver-684bc54f86-htnqh   1/1     Running   2 (5m27s ago)   6d
+webserver-684bc54f86-t4xkw   1/1     Running   2 (6m40s ago)   6d
+
+rob@rjmmx01:~$ kubectl config view
+apiVersion: v1
+clusters:
+- cluster:
+    certificate-authority: /home/rob/.minikube/ca.crt
+    extensions:
+    - extension:
+        last-update: Wed, 08 Apr 2026 11:02:10 EDT
+        provider: minikube.sigs.k8s.io
+        version: v1.38.1
+      name: cluster_info
+    server: https://192.168.49.2:8443
+  name: minikube
+contexts:
+- context:
+    cluster: minikube
+    extensions:
+    - extension:
+        last-update: Wed, 08 Apr 2026 11:02:10 EDT
+        provider: minikube.sigs.k8s.io
+        version: v1.38.1
+      name: context_info
+    namespace: default
+    user: minikube
+  name: minikube
+current-context: minikube
+kind: Config
+users:
+- name: minikube
+  user:
+    client-certificate: /home/rob/.minikube/profiles/minikube/client.crt
+    client-key: /home/rob/.minikube/profiles/minikube/client.key
+
+
+rob@rjmmx01:~$ kubectl logs hello-node-64fc5894d-zn85g
+I0408 15:05:15.754718       1 log.go:245] Started HTTP server on port 8080
+I0408 15:05:15.755063       1 log.go:245] Started UDP server on port  8081
+
+
+rob@rjmmx01:~$ kubectl expose deployment hello-node --type=LoadBalancer --port=8080
+service/hello-node exposed
+
+rob@rjmmx01:~$ kubectl get services
+NAME          TYPE           CLUSTER-IP       EXTERNAL-IP      PORT(S)          AGE
+hello-node    LoadBalancer   10.99.180.212    <pending>        8080:31361/TCP   34s
+kubernetes    ClusterIP      10.96.0.1        <none>           443/TCP          6d22h
+web-lb        LoadBalancer   10.103.207.139   10.103.207.139   8080:32430/TCP   6d
+web-service   NodePort       10.106.220.145   <none>           80:31623/TCP     6d
+
+rob@rjmmx01:~$ minikube service hello-node
+┌───────────┬────────────┬─────────────┬───────────────────────────┐
+│ NAMESPACE │    NAME    │ TARGET PORT │            URL            │
+├───────────┼────────────┼─────────────┼───────────────────────────┤
+│ default   │ hello-node │ 8080        │ http://192.168.49.2:31361 │
+└───────────┴────────────┴─────────────┴───────────────────────────┘
+🎉  Opening service default/hello-node in default browser...
+
+
+rob@rjmmx01:~$ minikube addons enable metrics-server
+💡  metrics-server is an addon maintained by Kubernetes. For any concerns contact minikube on GitHub.
+You can view the list of minikube maintainers at: https://github.com/kubernetes/minikube/blob/master/OWNERS
+    ▪ Using image registry.k8s.io/metrics-server/metrics-server:v0.8.1
+🌟  The 'metrics-server' addon is enabled
+rob@rjmmx01:~$ minikube addons list
+┌─────────────────────────────┬──────────┬────────────┬────────────────────────────────────────┐
+│         ADDON NAME          │ PROFILE  │   STATUS   │               MAINTAINER               │
+├─────────────────────────────┼──────────┼────────────┼────────────────────────────────────────┤
+│ ambassador                  │ minikube │ disabled   │ 3rd party (Ambassador)                 │
+│ amd-gpu-device-plugin       │ minikube │ disabled   │ 3rd party (AMD)                        │
+│ auto-pause                  │ minikube │ disabled   │ minikube                               │
+│ cloud-spanner               │ minikube │ disabled   │ Google                                 │
+│ csi-hostpath-driver         │ minikube │ disabled   │ Kubernetes                             │
+│ dashboard                   │ minikube │ disabled   │ Kubernetes                             │
+│ default-storageclass        │ minikube │ disabled   │ Kubernetes                             │
+│ efk                         │ minikube │ disabled   │ 3rd party (Elastic)                    │
+│ freshpod                    │ minikube │ disabled   │ Google                                 │
+│ gcp-auth                    │ minikube │ disabled   │ Google                                 │
+│ gvisor                      │ minikube │ disabled   │ minikube                               │
+│ headlamp                    │ minikube │ disabled   │ 3rd party (kinvolk.io)                 │
+│ inaccel                     │ minikube │ disabled   │ 3rd party (InAccel [info@inaccel.com]) │
+│ ingress                     │ minikube │ disabled   │ Kubernetes                             │
+│ ingress-dns                 │ minikube │ disabled   │ minikube                               │
+│ inspektor-gadget            │ minikube │ disabled   │ 3rd party (inspektor-gadget.io)        │
+│ istio                       │ minikube │ disabled   │ 3rd party (Istio)                      │
+│ istio-provisioner           │ minikube │ disabled   │ 3rd party (Istio)                      │
+│ kong                        │ minikube │ disabled   │ 3rd party (Kong HQ)                    │
+│ kubeflow                    │ minikube │ disabled   │ 3rd party                              │
+│ kubetail                    │ minikube │ disabled   │ 3rd party (kubetail.com)               │
+│ kubevirt                    │ minikube │ disabled   │ 3rd party (KubeVirt)                   │
+│ logviewer                   │ minikube │ disabled   │ 3rd party (unknown)                    │
+│ metallb                     │ minikube │ disabled   │ 3rd party (MetalLB)                    │
+│ metrics-server              │ minikube │ enabled ✅ │ Kubernetes                             │
+│ nvidia-device-plugin        │ minikube │ disabled   │ 3rd party (NVIDIA)                     │
+│ nvidia-driver-installer     │ minikube │ disabled   │ 3rd party (NVIDIA)                     │
+│ nvidia-gpu-device-plugin    │ minikube │ disabled   │ 3rd party (NVIDIA)                     │
+│ olm                         │ minikube │ disabled   │ 3rd party (Operator Framework)         │
+│ pod-security-policy         │ minikube │ disabled   │ 3rd party (unknown)                    │
+│ portainer                   │ minikube │ disabled   │ 3rd party (Portainer.io)               │
+│ registry                    │ minikube │ disabled   │ minikube                               │
+│ registry-aliases            │ minikube │ disabled   │ 3rd party (unknown)                    │
+│ registry-creds              │ minikube │ disabled   │ 3rd party (UPMC Enterprises)           │
+│ storage-provisioner         │ minikube │ disabled   │ minikube                               │
+│ storage-provisioner-rancher │ minikube │ disabled   │ 3rd party (Rancher)                    │
+│ volcano                     │ minikube │ disabled   │ third-party (volcano)                  │
+│ volumesnapshots             │ minikube │ disabled   │ Kubernetes                             │
+│ yakd                        │ minikube │ disabled   │ 3rd party (marcnuri.com)               │
+└─────────────────────────────┴──────────┴────────────┴────────────────────────────────────────┘
+
+
+
+rob@rjmmx01:~$ kubectl get pod,svc -n kube-system
+NAME                                           READY   STATUS    RESTARTS      AGE
+pod/calico-kube-controllers-565c89d6df-hs4bt   1/1     Running   3 (17m ago)   6d22h
+pod/calico-node-8nltg                          1/1     Running   3 (17m ago)   6d22h
+pod/calico-node-dt65s                          1/1     Running   3 (17m ago)   6d22h
+pod/calico-node-j9swg                          1/1     Running   3 (16m ago)   6d22h
+pod/coredns-7d764666f9-ns4r5                   1/1     Running   3 (17m ago)   6d22h
+pod/etcd-minikube                              1/1     Running   3 (17m ago)   6d22h
+pod/kube-apiserver-minikube                    1/1     Running   3 (17m ago)   6d22h
+pod/kube-controller-manager-minikube           1/1     Running   3 (17m ago)   6d22h
+pod/kube-proxy-cxg88                           1/1     Running   3 (17m ago)   6d22h
+pod/kube-proxy-mgbws                           1/1     Running   3 (17m ago)   6d22h
+pod/kube-proxy-xgdk5                           1/1     Running   3 (16m ago)   6d22h
+pod/kube-scheduler-minikube                    1/1     Running   3 (17m ago)   6d22h
+pod/metrics-server-9d74bb658-cr9r9             1/1     Running   1 (17m ago)   47h
+pod/storage-provisioner                        1/1     Running   6 (17m ago)   6d22h
+
+NAME                     TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)                  AGE
+service/kube-dns         ClusterIP   10.96.0.10      <none>        53/UDP,53/TCP,9153/TCP   6d22h
+service/metrics-server   ClusterIP   10.107.33.163   <none>        443/TCP                  47h
+
+
+Check the output from metrics-server:
+
+kubectl top pods
+
+rob@rjmmx01:~$ kubectl top pods
+NAME                         CPU(cores)   MEMORY(bytes)
+hello-node-64fc5894d-zn85g   1m           9Mi
+webserver-684bc54f86-flwz2   0m           17Mi
+webserver-684bc54f86-htnqh   0m           17Mi
+webserver-684bc54f86-t4xkw   0m           17Mi
+
+kubectl exec etcd-minikube -n kube-system -- etcdctl --endpoints=https://192.168.49.2:2379 --cacert=/var/lib/minikube/certs/etcd/ca.crt --key=/var/lib/minikube/certs/etcd/server.key --cert=/var/lib/minikube/certs/etcd/server.crt get /registry/services/specs/default/hello-node
