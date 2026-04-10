@@ -195,3 +195,554 @@ webserver-684bc54f86-htnqh   0m           17Mi
 webserver-684bc54f86-t4xkw   0m           17Mi
 
 kubectl exec etcd-minikube -n kube-system -- etcdctl --endpoints=https://192.168.49.2:2379 --cacert=/var/lib/minikube/certs/etcd/ca.crt --key=/var/lib/minikube/certs/etcd/server.key --cert=/var/lib/minikube/certs/etcd/server.crt get /registry/services/specs/default/hello-node
+
+Clean up minikube:
+
+rob@rjmmx01:~$ kubectl delete service hello-node
+service "hello-node" deleted from default namespace
+rob@rjmmx01:~$ kubectl delete deployment hello-node
+deployment.apps "hello-node" deleted from default namespace
+
+rob@rjmmx01:~$ kubectl get nodes
+NAME           STATUS   ROLES           AGE     VERSION
+minikube       Ready    control-plane   7d21h   v1.35.1
+minikube-m02   Ready    <none>          7d20h   v1.35.1
+minikube-m03   Ready    <none>          7d20h   v1.35.1
+
+
+rob@rjmmx01:~$ kubectl create deployment kubernetes-bootcamp --image=gcr.io/google-samples/kubernetes-bootcamp:v1
+deployment.apps/kubernetes-bootcamp created
+
+
+rob@rjmmx01:~$ kubectl get deploy
+NAME                  READY   UP-TO-DATE   AVAILABLE   AGE
+kubernetes-bootcamp   1/1     1            1           95s
+webserver             3/3     3            3           6d22h
+
+
+rob@rjmmx01:~$ kubectl proxy &
+[1] 102629
+rob@rjmmx01:~$ Starting to serve on 127.0.0.1:8001
+
+rob@rjmmx01:~$ curl http://localhost:8001/version
+{
+  "major": "1",
+  "minor": "35",
+  "emulationMajor": "1",
+  "emulationMinor": "35",
+  "minCompatibilityMajor": "1",
+  "minCompatibilityMinor": "34",
+  "gitVersion": "v1.35.1",
+  "gitCommit": "8fea90b45245ef5c8ba54e7ae044d3e777c22500",
+  "gitTreeState": "clean",
+  "buildDate": "2026-02-10T12:53:14Z",
+  "goVersion": "go1.25.6",
+  "compiler": "gc",
+  "platform": "linux/amd64"
+}
+
+rob@rjmmx01:~$export POD_NAME=$(kubectl get pods -o go-template --template '{{range .items}}{{.metadata.name}}{{"\n"}}{{end}}'))
+echo Name of the Pod: $POD_NAME
+Name of the Pod: kubernetes-bootcamp-67fbdd6b79-q5qfr webserver-684bc54f86-flwz2 webserver-684bc54f86-htnqh webserver-684bc54f86-t4xkw
+rob@rjmmx01:~$ export POD_NAME=kubernetes-bootcamp-67fbdd6b79-q5qfr
+
+
+kubectl get - list resources
+kubectl describe - show detailed information about a resource
+kubectl logs - print the logs from a container in a pod
+kubectl exec - execute a command on a container in a pod
+
+rob@rjmmx01:~$ kubectl get pods ${POD_NAME}
+NAME                                   READY   STATUS    RESTARTS   AGE
+kubernetes-bootcamp-67fbdd6b79-q5qfr   1/1     Running   0          7m34s
+
+
+rob@rjmmx01:~$ kubectl describe pods ${POD_NAME}
+Name:             kubernetes-bootcamp-67fbdd6b79-q5qfr
+Namespace:        default
+Priority:         0
+Service Account:  default
+Node:             minikube-m03/192.168.49.4
+Start Time:       Thu, 09 Apr 2026 09:27:03 -0400
+Labels:           app=kubernetes-bootcamp
+                  pod-template-hash=67fbdd6b79
+Annotations:      cni.projectcalico.org/containerID: 4a29bfa58c51b8a7ee24f01222cd28e159d530037071c6b9f16692eb07b64a3a
+                  cni.projectcalico.org/podIP: 10.244.151.11/32
+                  cni.projectcalico.org/podIPs: 10.244.151.11/32
+Status:           Running
+IP:               10.244.151.11
+IPs:
+  IP:           10.244.151.11
+Controlled By:  ReplicaSet/kubernetes-bootcamp-67fbdd6b79
+Containers:
+  kubernetes-bootcamp:
+    Container ID:   containerd://b8971eb062f412629f7898c1a3fbfe78f3ca7757cabd0e2ad7c29b9296e85b6a
+    Image:          gcr.io/google-samples/kubernetes-bootcamp:v1
+    Image ID:       gcr.io/google-samples/kubernetes-bootcamp@sha256:0d6b8ee63bb57c5f5b6156f446b3bc3b3c143d233037f3a2f00e279c8fcc64af
+    Port:           <none>
+    Host Port:      <none>
+    State:          Running
+      Started:      Thu, 09 Apr 2026 09:27:17 -0400
+    Ready:          True
+    Restart Count:  0
+    Environment:    <none>
+    Mounts:
+      /var/run/secrets/kubernetes.io/serviceaccount from kube-api-access-8dxmv (ro)
+Conditions:
+  Type                        Status
+  PodReadyToStartContainers   True
+  Initialized                 True
+  Ready                       True
+  ContainersReady             True
+  PodScheduled                True
+Volumes:
+  kube-api-access-8dxmv:
+    Type:                    Projected (a volume that contains injected data from multiple sources)
+    TokenExpirationSeconds:  3607
+    ConfigMapName:           kube-root-ca.crt
+    Optional:                false
+    DownwardAPI:             true
+QoS Class:                   BestEffort
+Node-Selectors:              <none>
+Tolerations:                 node.kubernetes.io/not-ready:NoExecute op=Exists for 300s
+                             node.kubernetes.io/unreachable:NoExecute op=Exists for 300s
+Events:
+  Type    Reason     Age    From               Message
+  ----    ------     ----   ----               -------
+  Normal  Scheduled  8m8s   default-scheduler  Successfully assigned default/kubernetes-bootcamp-67fbdd6b79-q5qfr to minikube-m03
+  Normal  Pulling    8m8s   kubelet            spec.containers{kubernetes-bootcamp}: Pulling image "gcr.io/google-samples/kubernetes-bootcamp:v1"
+  Normal  Pulled     7m54s  kubelet            spec.containers{kubernetes-bootcamp}: Successfully pulled image "gcr.io/google-samples/kubernetes-bootcamp:v1" in 14.018s (14.018s including waiting). Image size: 83642968 bytes.
+  Normal  Created    7m54s  kubelet            spec.containers{kubernetes-bootcamp}: Container created
+  Normal  Started    7m54s  kubelet            spec.containers{kubernetes-bootcamp}: Container started
+rob@rjmmx01:~$
+
+Using kubectl proxy to get data from the pod:
+
+rob@rjmmx01:~$ curl http://localhost:8001/api/v1/namespaces/default/pods/$POD_NAME:8080/proxy/
+Hello Kubernetes bootcamp! | Running on: kubernetes-bootcamp-67fbdd6b79-q5qfr | v=1
+
+
+rob@rjmmx01:~$ kubectl exec "$POD_NAME" -- env
+PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+HOSTNAME=kubernetes-bootcamp-67fbdd6b79-q5qfr
+NPM_CONFIG_LOGLEVEL=info
+NODE_VERSION=6.3.1
+WEB_SERVICE_PORT_80_TCP=tcp://10.106.220.145:80
+WEB_SERVICE_PORT_80_TCP_ADDR=10.106.220.145
+KUBERNETES_PORT_443_TCP_PORT=443
+WEB_SERVICE_PORT_80_TCP_PORT=80
+WEB_LB_SERVICE_HOST=10.103.207.139
+WEB_LB_SERVICE_PORT=8080
+WEB_LB_PORT=tcp://10.103.207.139:8080
+WEB_LB_PORT_8080_TCP_PORT=8080
+KUBERNETES_SERVICE_HOST=10.96.0.1
+KUBERNETES_SERVICE_PORT=443
+KUBERNETES_SERVICE_PORT_HTTPS=443
+WEB_SERVICE_SERVICE_HOST=10.106.220.145
+WEB_LB_PORT_8080_TCP_PROTO=tcp
+KUBERNETES_PORT=tcp://10.96.0.1:443
+KUBERNETES_PORT_443_TCP=tcp://10.96.0.1:443
+KUBERNETES_PORT_443_TCP_PROTO=tcp
+KUBERNETES_PORT_443_TCP_ADDR=10.96.0.1
+WEB_SERVICE_SERVICE_PORT=80
+WEB_SERVICE_PORT=tcp://10.106.220.145:80
+WEB_SERVICE_PORT_80_TCP_PROTO=tcp
+WEB_LB_PORT_8080_TCP=tcp://10.103.207.139:8080
+WEB_LB_PORT_8080_TCP_ADDR=10.103.207.139
+HOME=/root
+
+
+rob@rjmmx01:~$ kubectl exec -ti $POD_NAME -- bash
+root@kubernetes-bootcamp-67fbdd6b79-q5qfr:/#
+
+
+root@kubernetes-bootcamp-67fbdd6b79-q5qfr:/# cat server.js
+var http = require('http');
+var requests=0;
+var podname= process.env.HOSTNAME;
+var startTime;
+var host;
+var handleRequest = function(request, response) {
+  response.setHeader('Content-Type', 'text/plain');
+  response.writeHead(200);
+  response.write("Hello Kubernetes bootcamp! | Running on: ");
+  response.write(host);
+  response.end(" | v=1\n");
+  console.log("Running On:" ,host, "| Total Requests:", ++requests,"| App Uptime:", (new Date() - startTime)/1000 , "seconds", "| Log Time:",new Date());
+}
+var www = http.createServer(handleRequest);
+www.listen(8080,function () {
+    startTime = new Date();;
+    host = process.env.HOSTNAME;
+    console.log ("Kubernetes Bootcamp App Started At:",startTime, "| Running On: " ,host, "\n" );
+});
+
+
+In the container, you don't need to go through kubectl proxy:
+
+root@kubernetes-bootcamp-67fbdd6b79-q5qfr:/# curl http://localhost:8080
+Hello Kubernetes bootcamp! | Running on: kubernetes-bootcamp-67fbdd6b79-q5qfr | v=1
+
+
+rob@rjmmx01:~$ kubectl get pods
+NAME                                   READY   STATUS    RESTARTS      AGE
+kubernetes-bootcamp-67fbdd6b79-q5qfr   1/1     Running   0             19m
+webserver-684bc54f86-flwz2             1/1     Running   3 (72m ago)   6d22h
+webserver-684bc54f86-htnqh             1/1     Running   3 (72m ago)   6d22h
+webserver-684bc54f86-t4xkw             1/1     Running   3 (73m ago)   6d22h
+rob@rjmmx01:~$ kubectl get services
+NAME          TYPE           CLUSTER-IP       EXTERNAL-IP      PORT(S)          AGE
+kubernetes    ClusterIP      10.96.0.1        <none>           443/TCP          7d21h
+web-lb        LoadBalancer   10.103.207.139   10.103.207.139   8080:32430/TCP   6d22h
+web-service   NodePort       10.106.220.145   <none>           80:31623/TCP     6d22h
+
+
+rob@rjmmx01:~$ kubectl expose deployment/kubernetes-bootcamp --type="NodePort" --port 8080
+service/kubernetes-bootcamp exposed
+rob@rjmmx01:~$ kubectl describe services/kubernetes-bootcamp
+Name:                     kubernetes-bootcamp
+Namespace:                default
+Labels:                   app=kubernetes-bootcamp
+Annotations:              <none>
+Selector:                 app=kubernetes-bootcamp
+Type:                     NodePort
+IP Family Policy:         SingleStack
+IP Families:              IPv4
+IP:                       10.111.68.164
+IPs:                      10.111.68.164
+Port:                     <unset>  8080/TCP
+TargetPort:               8080/TCP
+NodePort:                 <unset>  32269/TCP
+Endpoints:                10.244.151.11:8080
+Session Affinity:         None
+External Traffic Policy:  Cluster
+Internal Traffic Policy:  Cluster
+Events:                   <none>
+
+
+rob@rjmmx01:~$ export NODE_PORT="$(kubectl get services/kubernetes-bootcamp -o go-template='{{(index .spec.ports 0).nodePort}}')"
+echo "NODE_PORT=$NODE_PORT"
+NODE_PORT=32269
+
+
+rob@rjmmx01:~$ curl http://"$(minikube ip):$NODE_PORT"
+Hello Kubernetes bootcamp! | Running on: kubernetes-bootcamp-67fbdd6b79-q5qfr | v=1
+
+
+rob@rjmmx01:~$ kubectl get deploy
+NAME                  READY   UP-TO-DATE   AVAILABLE   AGE
+kubernetes-bootcamp   1/1     1            1           24m
+webserver             3/3     3            3           6d23h
+rob@rjmmx01:~$ kubectl describe deployment kubernetes-bootcamp
+Name:                   kubernetes-bootcamp
+Namespace:              default
+CreationTimestamp:      Thu, 09 Apr 2026 09:27:03 -0400
+Labels:                 app=kubernetes-bootcamp
+Annotations:            deployment.kubernetes.io/revision: 1
+Selector:               app=kubernetes-bootcamp
+Replicas:               1 desired | 1 updated | 1 total | 1 available | 0 unavailable
+StrategyType:           RollingUpdate
+MinReadySeconds:        0
+RollingUpdateStrategy:  25% max unavailable, 25% max surge
+Pod Template:
+  Labels:  app=kubernetes-bootcamp
+  Containers:
+   kubernetes-bootcamp:
+    Image:         gcr.io/google-samples/kubernetes-bootcamp:v1
+    Port:          <none>
+    Host Port:     <none>
+    Environment:   <none>
+    Mounts:        <none>
+  Volumes:         <none>
+  Node-Selectors:  <none>
+  Tolerations:     <none>
+Conditions:
+  Type           Status  Reason
+  ----           ------  ------
+  Available      True    MinimumReplicasAvailable
+  Progressing    True    NewReplicaSetAvailable
+OldReplicaSets:  <none>
+NewReplicaSet:   kubernetes-bootcamp-67fbdd6b79 (1/1 replicas created)
+Events:
+  Type    Reason             Age   From                   Message
+  ----    ------             ----  ----                   -------
+  Normal  ScalingReplicaSet  24m   deployment-controller  Scaled up replica set kubernetes-bootcamp-67fbdd6b79 from 0 to 1
+
+
+Using the label:
+
+rob@rjmmx01:~$ kubectl get pods -l app=kubernetes-bootcamp
+NAME                                   READY   STATUS    RESTARTS   AGE
+kubernetes-bootcamp-67fbdd6b79-q5qfr   1/1     Running   0          27m
+
+
+rob@rjmmx01:~$ kubectl get services -l app=kubernetes-bootcamp
+NAME                  TYPE       CLUSTER-IP      EXTERNAL-IP   PORT(S)          AGE
+kubernetes-bootcamp   NodePort   10.111.68.164   <none>        8080:32269/TCP   7m29s
+
+
+rob@rjmmx01:~$ kubectl label pods "$POD_NAME" version=v1
+pod/kubernetes-bootcamp-67fbdd6b79-q5qfr labeled
+
+
+rob@rjmmx01:~$ kubectl describe pods ${POD_NAME}
+Name:             kubernetes-bootcamp-67fbdd6b79-q5qfr
+Namespace:        default
+Priority:         0
+Service Account:  default
+Node:             minikube-m03/192.168.49.4
+Start Time:       Thu, 09 Apr 2026 09:27:03 -0400
+Labels:           app=kubernetes-bootcamp
+                  pod-template-hash=67fbdd6b79
+                  version=v1
+Annotations:      cni.projectcalico.org/containerID: 4a29bfa58c51b8a7ee24f01222cd28e159d530037071c6b9f16692eb07b64a3a
+                  cni.projectcalico.org/podIP: 10.244.151.11/32
+                  cni.projectcalico.org/podIPs: 10.244.151.11/32
+Status:           Running
+IP:               10.244.151.11
+IPs:
+  IP:           10.244.151.11
+Controlled By:  ReplicaSet/kubernetes-bootcamp-67fbdd6b79
+Containers:
+  kubernetes-bootcamp:
+    Container ID:   containerd://b8971eb062f412629f7898c1a3fbfe78f3ca7757cabd0e2ad7c29b9296e85b6a
+    Image:          gcr.io/google-samples/kubernetes-bootcamp:v1
+    Image ID:       gcr.io/google-samples/kubernetes-bootcamp@sha256:0d6b8ee63bb57c5f5b6156f446b3bc3b3c143d233037f3a2f00e279c8fcc64af
+    Port:           <none>
+    Host Port:      <none>
+    State:          Running
+      Started:      Thu, 09 Apr 2026 09:27:17 -0400
+    Ready:          True
+    Restart Count:  0
+    Environment:    <none>
+    Mounts:
+      /var/run/secrets/kubernetes.io/serviceaccount from kube-api-access-8dxmv (ro)
+Conditions:
+  Type                        Status
+  PodReadyToStartContainers   True
+  Initialized                 True
+  Ready                       True
+  ContainersReady             True
+  PodScheduled                True
+Volumes:
+  kube-api-access-8dxmv:
+    Type:                    Projected (a volume that contains injected data from multiple sources)
+    TokenExpirationSeconds:  3607
+    ConfigMapName:           kube-root-ca.crt
+    Optional:                false
+    DownwardAPI:             true
+QoS Class:                   BestEffort
+Node-Selectors:              <none>
+Tolerations:                 node.kubernetes.io/not-ready:NoExecute op=Exists for 300s
+                             node.kubernetes.io/unreachable:NoExecute op=Exists for 300s
+Events:
+  Type    Reason     Age   From               Message
+  ----    ------     ----  ----               -------
+  Normal  Scheduled  30m   default-scheduler  Successfully assigned default/kubernetes-bootcamp-67fbdd6b79-q5qfr to minikube-m03
+  Normal  Pulling    30m   kubelet            spec.containers{kubernetes-bootcamp}: Pulling image "gcr.io/google-samples/kubernetes-bootcamp:v1"
+  Normal  Pulled     29m   kubelet            spec.containers{kubernetes-bootcamp}: Successfully pulled image "gcr.io/google-samples/kubernetes-bootcamp:v1" in 14.018s (14.018s including waiting). Image size: 83642968 bytes.
+  Normal  Created    29m   kubelet            spec.containers{kubernetes-bootcamp}: Container created
+  Normal  Started    29m   kubelet            spec.containers{kubernetes-bootcamp}: Container started
+rob@rjmmx01:~$
+
+
+Get all of the pods with version=v1
+
+rob@rjmmx01:~$ kubectl get pods -l version=v1
+NAME                                   READY   STATUS    RESTARTS   AGE
+kubernetes-bootcamp-67fbdd6b79-q5qfr   1/1     Running   0          31m
+
+rob@rjmmx01:~$ kubectl delete service -l app=kubernetes-bootcamp
+service "kubernetes-bootcamp" deleted from default namespace
+
+
+bootcamp service no longer there:
+
+rob@rjmmx01:~$ kubectl get services
+NAME          TYPE           CLUSTER-IP       EXTERNAL-IP      PORT(S)          AGE
+kubernetes    ClusterIP      10.96.0.1        <none>           443/TCP          7d21h
+web-lb        LoadBalancer   10.103.207.139   10.103.207.139   8080:32430/TCP   6d23h
+web-service   NodePort       10.106.220.145   <none>           80:31623/TCP     6d23h
+rob@rjmmx01:~$
+
+Service is no longer reachable:
+
+rob@rjmmx01:~$ curl http://"$(minikube ip):$NODE_PORT"
+curl: (7) Failed to connect to 192.168.49.2 port 32269 after 0 ms: Could not connect to server
+
+
+Because we didn't delete the deployment, the pod is still running:
+
+rob@rjmmx01:~$ kubectl exec -ti $POD_NAME -- curl http://localhost:8080
+Hello Kubernetes bootcamp! | Running on: kubernetes-bootcamp-67fbdd6b79-q5qfr | v=1
+
+
+rob@rjmmx01:~$ kubectl get deploy
+NAME                  READY   UP-TO-DATE   AVAILABLE   AGE
+kubernetes-bootcamp   1/1     1            1           35m
+webserver             3/3     3            3           6d23h
+rob@rjmmx01:~$ kubectl delete deploy kubernetes-bootcamp
+deployment.apps "kubernetes-bootcamp" deleted from default namespace
+rob@rjmmx01:~$ kubectl get deploy
+NAME        READY   UP-TO-DATE   AVAILABLE   AGE
+webserver   3/3     3            3           6d23h
+
+
+rob@rjmmx01:~$ kubectl create deployment kubernetes-bootcamp --image=gcr.io/google-samples/kubernetes-bootcamp:v1
+deployment.apps/kubernetes-bootcamp created
+rob@rjmmx01:~$ kubectl expose deployment/kubernetes-bootcamp --type="NodePort" --port 8080
+service/kubernetes-bootcamp exposed
+rob@rjmmx01:~$ kubectl delete service kubernetes-bootcamp
+service "kubernetes-bootcamp" deleted from default namespace
+rob@rjmmx01:~$ kubectl expose deployment/kubernetes-bootcamp --type="LoadBalancer" --port 8080
+service/kubernetes-bootcamp exposed
+rob@rjmmx01:~$ kubectl get deployments
+NAME                  READY   UP-TO-DATE   AVAILABLE   AGE
+kubernetes-bootcamp   1/1     1            1           109s
+webserver             3/3     3            3           6d23h
+
+
+Check the replicasets:
+
+rob@rjmmx01:~$ kubectl get rs
+NAME                             DESIRED   CURRENT   READY   AGE
+kubernetes-bootcamp-67fbdd6b79   1         1         1       2m43s
+webserver-684bc54f86             3         3         3       6d23h
+rob@rjmmx01:~$
+
+
+rob@rjmmx01:~$ kubectl scale deployments/kubernetes-bootcamp --replicas=4
+deployment.apps/kubernetes-bootcamp scaled
+rob@rjmmx01:~$ kubectl get deploy
+NAME                  READY   UP-TO-DATE   AVAILABLE   AGE
+kubernetes-bootcamp   2/4     4            2           3m54s
+webserver             3/3     3            3           6d23h
+rob@rjmmx01:~$ kubectl get deploy
+NAME                  READY   UP-TO-DATE   AVAILABLE   AGE
+kubernetes-bootcamp   3/4     4            3           4m3s
+webserver             3/3     3            3           6d23h
+rob@rjmmx01:~$ kubectl get deploy
+NAME                  READY   UP-TO-DATE   AVAILABLE   AGE
+kubernetes-bootcamp   4/4     4            4           4m13s
+webserver             3/3     3            3           6d23h
+
+It takes a little bit to scale up the deployment
+
+rob@rjmmx01:~$ kubectl get pods -o wide
+NAME                                   READY   STATUS    RESTARTS      AGE     IP               NODE           NOMINATED NODE   READINESS GATES
+kubernetes-bootcamp-67fbdd6b79-8zfff   1/1     Running   0             85s     10.244.120.84    minikube       <none>           <none>
+kubernetes-bootcamp-67fbdd6b79-f55vn   1/1     Running   0             85s     10.244.151.13    minikube-m03   <none>           <none>
+kubernetes-bootcamp-67fbdd6b79-rz2dx   1/1     Running   0             5m4s    10.244.151.12    minikube-m03   <none>           <none>
+kubernetes-bootcamp-67fbdd6b79-tcf89   1/1     Running   0             85s     10.244.205.206   minikube-m02   <none>           <none>
+webserver-684bc54f86-flwz2             1/1     Running   3 (96m ago)   6d23h   10.244.205.205   minikube-m02   <none>           <none>
+webserver-684bc54f86-htnqh             1/1     Running   3 (96m ago)   6d23h   10.244.151.10    minikube-m03   <none>           <none>
+webserver-684bc54f86-t4xkw             1/1     Running   3 (97m ago)   6d23h   10.244.120.83    minikube       <none>           <none>
+rob@rjmmx01:~$
+
+
+rob@rjmmx01:~$ kubectl describe deployments/kubernetes-bootcamp
+Name:                   kubernetes-bootcamp
+Namespace:              default
+CreationTimestamp:      Thu, 09 Apr 2026 10:05:43 -0400
+Labels:                 app=kubernetes-bootcamp
+Annotations:            deployment.kubernetes.io/revision: 1
+Selector:               app=kubernetes-bootcamp
+Replicas:               4 desired | 4 updated | 4 total | 4 available | 0 unavailable
+StrategyType:           RollingUpdate
+MinReadySeconds:        0
+RollingUpdateStrategy:  25% max unavailable, 25% max surge
+Pod Template:
+  Labels:  app=kubernetes-bootcamp
+  Containers:
+   kubernetes-bootcamp:
+    Image:         gcr.io/google-samples/kubernetes-bootcamp:v1
+    Port:          <none>
+    Host Port:     <none>
+    Environment:   <none>
+    Mounts:        <none>
+  Volumes:         <none>
+  Node-Selectors:  <none>
+  Tolerations:     <none>
+Conditions:
+  Type           Status  Reason
+  ----           ------  ------
+  Progressing    True    NewReplicaSetAvailable
+  Available      True    MinimumReplicasAvailable
+OldReplicaSets:  <none>
+NewReplicaSet:   kubernetes-bootcamp-67fbdd6b79 (4/4 replicas created)
+Events:
+  Type    Reason             Age    From                   Message
+  ----    ------             ----   ----                   -------
+  Normal  ScalingReplicaSet  5m53s  deployment-controller  Scaled up replica set kubernetes-bootcamp-67fbdd6b79 from 0 to 1
+  Normal  ScalingReplicaSet  2m14s  deployment-controller  Scaled up replica set kubernetes-bootcamp-67fbdd6b79 from 1 to 4
+
+
+rob@rjmmx01:~$ kubectl describe services/kubernetes-bootcamp
+Name:                     kubernetes-bootcamp
+Namespace:                default
+Labels:                   app=kubernetes-bootcamp
+Annotations:              <none>
+Selector:                 app=kubernetes-bootcamp
+Type:                     LoadBalancer
+IP Family Policy:         SingleStack
+IP Families:              IPv4
+IP:                       10.96.109.81
+IPs:                      10.96.109.81
+Port:                     <unset>  8080/TCP
+TargetPort:               8080/TCP
+NodePort:                 <unset>  31284/TCP
+Endpoints:                10.244.151.12:8080,10.244.151.13:8080,10.244.120.84:8080 + 1 more...
+Session Affinity:         None
+External Traffic Policy:  Cluster
+Internal Traffic Policy:  Cluster
+Events:                   <none>
+
+
+rob@rjmmx01:~$ export NODE_PORT="$(kubectl get services/kubernetes-bootcamp -o go-template='{{(index .spec.ports 0).nodePort}}')"
+echo NODE_PORT=$NODE_PORT
+NODE_PORT=31284
+
+
+Load balancing is working:
+
+rob@rjmmx01:~$ curl http://"$(minikube ip):$NODE_PORT"
+Hello Kubernetes bootcamp! | Running on: kubernetes-bootcamp-67fbdd6b79-f55vn | v=1
+rob@rjmmx01:~$ curl http://"$(minikube ip):$NODE_PORT"
+Hello Kubernetes bootcamp! | Running on: kubernetes-bootcamp-67fbdd6b79-8zfff | v=1
+rob@rjmmx01:~$ curl http://"$(minikube ip):$NODE_PORT"
+Hello Kubernetes bootcamp! | Running on: kubernetes-bootcamp-67fbdd6b79-rz2dx | v=1
+rob@rjmmx01:~$ curl http://"$(minikube ip):$NODE_PORT"
+Hello Kubernetes bootcamp! | Running on: kubernetes-bootcamp-67fbdd6b79-tcf89 | v=1
+rob@rjmmx01:~$ curl http://"$(minikube ip):$NODE_PORT"
+Hello Kubernetes bootcamp! | Running on: kubernetes-bootcamp-67fbdd6b79-f55vn | v=1
+rob@rjmmx01:~$ curl http://"$(minikube ip):$NODE_PORT"
+Hello Kubernetes bootcamp! | Running on: kubernetes-bootcamp-67fbdd6b79-tcf89 | v=1
+rob@rjmmx01:~$ curl http://"$(minikube ip):$NODE_PORT"
+Hello Kubernetes bootcamp! | Running on: kubernetes-bootcamp-67fbdd6b79-8zfff | v=1
+rob@rjmmx01:~$ curl http://"$(minikube ip):$NODE_PORT"
+Hello Kubernetes bootcamp! | Running on: kubernetes-bootcamp-67fbdd6b79-f55vn | v=1
+rob@rjmmx01:~$ curl http://"$(minikube ip):$NODE_PORT"
+Hello Kubernetes bootcamp! | Running on: kubernetes-bootcamp-67fbdd6b79-tcf89 | v=1
+
+rob@rjmmx01:~$ minikube service kubernetes-bootcamp --url
+http://192.168.49.2:31284
+rob@rjmmx01:~$ curl $(minikube service kubernetes-bootcamp --url)
+Hello Kubernetes bootcamp! | Running on: kubernetes-bootcamp-67fbdd6b79-tcf89 | v=1
+
+Scale the deployment back to 2:
+
+rob@rjmmx01:~$ kubectl scale deployments/kubernetes-bootcamp --replicas=2
+deployment.apps/kubernetes-bootcamp scaled
+rob@rjmmx01:~$ kubectl get deployments
+NAME                  READY   UP-TO-DATE   AVAILABLE   AGE
+kubernetes-bootcamp   2/2     2            2           11m
+webserver             3/3     3            3           6d23h
+rob@rjmmx01:~$ kubectl get pods -o wide
+NAME                                   READY   STATUS    RESTARTS       AGE     IP               NODE           NOMINATED NODE   READINESS GATES
+kubernetes-bootcamp-67fbdd6b79-8zfff   1/1     Running   0              7m53s   10.244.120.84    minikube       <none>           <none>
+kubernetes-bootcamp-67fbdd6b79-tcf89   1/1     Running   0              7m53s   10.244.205.206   minikube-m02   <none>           <none>
+webserver-684bc54f86-flwz2             1/1     Running   3 (103m ago)   6d23h   10.244.205.205   minikube-m02   <none>           <none>
+webserver-684bc54f86-htnqh             1/1     Running   3 (102m ago)   6d23h   10.244.151.10    minikube-m03   <none>           <none>
+webserver-684bc54f86-t4xkw             1/1     Running   3 (104m ago)   6d23h   10.244.120.83    minikube       <none>           <none>
+
+
