@@ -746,3 +746,775 @@ webserver-684bc54f86-htnqh             1/1     Running   3 (102m ago)   6d23h   
 webserver-684bc54f86-t4xkw             1/1     Running   3 (104m ago)   6d23h   10.244.120.83    minikube       <none>           <none>
 
 
+rob@rjmmx01:~$ kubectl get deploy
+NAME                  READY   UP-TO-DATE   AVAILABLE   AGE
+kubernetes-bootcamp   2/2     2            2           23h
+webserver             3/3     3            3           7d22h
+rob@rjmmx01:~$ kubectl get pods
+NAME                                   READY   STATUS    RESTARTS      AGE
+kubernetes-bootcamp-67fbdd6b79-8zfff   1/1     Running   1 (14m ago)   23h
+kubernetes-bootcamp-67fbdd6b79-tcf89   1/1     Running   1 (14m ago)   23h
+webserver-684bc54f86-flwz2             1/1     Running   4 (14m ago)   7d22h
+webserver-684bc54f86-htnqh             1/1     Running   4 (13m ago)   7d22h
+webserver-684bc54f86-t4xkw             1/1     Running   4 (14m ago)   7d22h
+rob@rjmmx01:~$ kubectl describe pods
+Name:             kubernetes-bootcamp-67fbdd6b79-8zfff
+Namespace:        default
+Priority:         0
+Service Account:  default
+Node:             minikube/192.168.49.2
+Start Time:       Thu, 09 Apr 2026 10:09:22 -0400
+Labels:           app=kubernetes-bootcamp
+                  pod-template-hash=67fbdd6b79
+Annotations:      cni.projectcalico.org/containerID: 2e97ac98ca3b446c81b7021173c4615382b78a3913791980fd168917aa8f1650
+                  cni.projectcalico.org/podIP: 10.244.120.89/32
+                  cni.projectcalico.org/podIPs: 10.244.120.89/32
+Status:           Running
+IP:               10.244.120.89
+IPs:
+  IP:           10.244.120.89
+Controlled By:  ReplicaSet/kubernetes-bootcamp-67fbdd6b79
+Containers:
+  kubernetes-bootcamp:
+    Container ID:   containerd://ebfc5bbb1439fc12985bb2a95b7e58894852ed70ba9e3feaea455fc1adeadb2d
+    Image:          gcr.io/google-samples/kubernetes-bootcamp:v1
+    Image ID:       gcr.io/google-samples/kubernetes-bootcamp@sha256:0d6b8ee63bb57c5f5b6156f446b3bc3b3c143d233037f3a2f00e279c8fcc64af
+    Port:           <none>
+    Host Port:      <none>
+    State:          Running
+      Started:      Fri, 10 Apr 2026 09:11:50 -0400
+    Last State:     Terminated
+      Reason:       Unknown
+      Exit Code:    255
+      Started:      Thu, 09 Apr 2026 10:09:37 -0400
+      Finished:     Fri, 10 Apr 2026 09:10:59 -0400
+    Ready:          True
+    Restart Count:  1
+    Environment:    <none>
+    Mounts:
+      /var/run/secrets/kubernetes.io/serviceaccount from kube-api-access-4q4vc (ro)
+Conditions:
+  Type                        Status
+  PodReadyToStartContainers   True
+  Initialized                 True
+  Ready                       True
+  ContainersReady             True
+  PodScheduled                True
+Volumes:
+  kube-api-access-4q4vc:
+    Type:                    Projected (a volume that contains injected data from multiple sources)
+    TokenExpirationSeconds:  3607
+    ConfigMapName:           kube-root-ca.crt
+    Optional:                false
+    DownwardAPI:             true
+QoS Class:                   BestEffort
+Node-Selectors:              <none>
+Tolerations:                 node.kubernetes.io/not-ready:NoExecute op=Exists for 300s
+                             node.kubernetes.io/unreachable:NoExecute op=Exists for 300s
+Events:
+  Type    Reason          Age                From     Message
+  ----    ------          ----               ----     -------
+  Normal  SandboxChanged  14m (x2 over 14m)  kubelet  Pod sandbox changed, it will be killed and re-created.
+  Normal  Pulled          14m                kubelet  spec.containers{kubernetes-bootcamp}: Container image "gcr.io/google-samples/kubernetes-bootcamp:v1" already present on machine and can be accessed by the pod
+  Normal  Created         14m                kubelet  spec.containers{kubernetes-bootcamp}: Container created
+  Normal  Started         14m                kubelet  spec.containers{kubernetes-bootcamp}: Container started
+
+
+Name:             kubernetes-bootcamp-67fbdd6b79-tcf89
+Namespace:        default
+Priority:         0
+Service Account:  default
+Node:             minikube-m02/192.168.49.3
+Start Time:       Thu, 09 Apr 2026 10:09:22 -0400
+Labels:           app=kubernetes-bootcamp
+                  pod-template-hash=67fbdd6b79
+Annotations:      cni.projectcalico.org/containerID: 56fae3770761c6707820f71d7ed0e95cab11c566ad14a8399724bcbb6b88f223
+                  cni.projectcalico.org/podIP: 10.244.205.209/32
+                  cni.projectcalico.org/podIPs: 10.244.205.209/32
+Status:           Running
+IP:               10.244.205.209
+IPs:
+  IP:           10.244.205.209
+Controlled By:  ReplicaSet/kubernetes-bootcamp-67fbdd6b79
+Containers:
+  kubernetes-bootcamp:
+    Container ID:   containerd://a56cca57519beb7f4d06543a59370aee5e76ac048066f70a9544c7ae405f9790
+    Image:          gcr.io/google-samples/kubernetes-bootcamp:v1
+    Image ID:       gcr.io/google-samples/kubernetes-bootcamp@sha256:0d6b8ee63bb57c5f5b6156f446b3bc3b3c143d233037f3a2f00e279c8fcc64af
+    Port:           <none>
+    Host Port:      <none>
+    State:          Running
+      Started:      Fri, 10 Apr 2026 09:12:46 -0400
+    Last State:     Terminated
+      Reason:       Unknown
+      Exit Code:    255
+      Started:      Thu, 09 Apr 2026 10:09:50 -0400
+      Finished:     Fri, 10 Apr 2026 09:11:42 -0400
+    Ready:          True
+    Restart Count:  1
+    Environment:    <none>
+    Mounts:
+      /var/run/secrets/kubernetes.io/serviceaccount from kube-api-access-9wjvk (ro)
+Conditions:
+  Type                        Status
+  PodReadyToStartContainers   True
+  Initialized                 True
+  Ready                       True
+  ContainersReady             True
+  PodScheduled                True
+Volumes:
+  kube-api-access-9wjvk:
+    Type:                    Projected (a volume that contains injected data from multiple sources)
+    TokenExpirationSeconds:  3607
+    ConfigMapName:           kube-root-ca.crt
+    Optional:                false
+    DownwardAPI:             true
+QoS Class:                   BestEffort
+Node-Selectors:              <none>
+Tolerations:                 node.kubernetes.io/not-ready:NoExecute op=Exists for 300s
+                             node.kubernetes.io/unreachable:NoExecute op=Exists for 300s
+Events:
+  Type    Reason          Age                From     Message
+  ----    ------          ----               ----     -------
+  Normal  SandboxChanged  13m (x2 over 13m)  kubelet  Pod sandbox changed, it will be killed and re-created.
+  Normal  Pulled          13m                kubelet  spec.containers{kubernetes-bootcamp}: Container image "gcr.io/google-samples/kubernetes-bootcamp:v1" already present on machine and can be accessed by the pod
+  Normal  Created         13m                kubelet  spec.containers{kubernetes-bootcamp}: Container created
+  Normal  Started         13m                kubelet  spec.containers{kubernetes-bootcamp}: Container started
+
+
+Name:             webserver-684bc54f86-flwz2
+Namespace:        default
+Priority:         0
+Service Account:  default
+Node:             minikube-m02/192.168.49.3
+Start Time:       Thu, 02 Apr 2026 10:48:02 -0400
+Labels:           app=webserver
+                  pod-template-hash=684bc54f86
+Annotations:      cni.projectcalico.org/containerID: 01f8535140996f9d7e292a828511f8ae8e44bf99b038c9ee085788203adce0f3
+                  cni.projectcalico.org/podIP: 10.244.205.210/32
+                  cni.projectcalico.org/podIPs: 10.244.205.210/32
+Status:           Running
+IP:               10.244.205.210
+IPs:
+  IP:           10.244.205.210
+Controlled By:  ReplicaSet/webserver-684bc54f86
+Containers:
+  nginx:
+    Container ID:   containerd://be83c83d3408a7a8776e23ccd8f9829ad0e4355fdd2812946d6d3a26f0f277f4
+    Image:          nginx:alpine
+    Image ID:       docker.io/library/nginx@sha256:e7257f1ef28ba17cf7c248cb8ccf6f0c6e0228ab9c315c152f9c203cd34cf6d1
+    Port:           80/TCP
+    Host Port:      0/TCP
+    State:          Running
+      Started:      Fri, 10 Apr 2026 09:12:49 -0400
+    Last State:     Terminated
+      Reason:       Unknown
+      Exit Code:    255
+      Started:      Thu, 09 Apr 2026 08:34:43 -0400
+      Finished:     Fri, 10 Apr 2026 09:11:42 -0400
+    Ready:          True
+    Restart Count:  4
+    Environment:    <none>
+    Mounts:
+      /var/run/secrets/kubernetes.io/serviceaccount from kube-api-access-4dgvg (ro)
+Conditions:
+  Type                        Status
+  PodReadyToStartContainers   True
+  Initialized                 True
+  Ready                       True
+  ContainersReady             True
+  PodScheduled                True
+Volumes:
+  kube-api-access-4dgvg:
+    Type:                    Projected (a volume that contains injected data from multiple sources)
+    TokenExpirationSeconds:  3607
+    ConfigMapName:           kube-root-ca.crt
+    Optional:                false
+    DownwardAPI:             true
+QoS Class:                   BestEffort
+Node-Selectors:              <none>
+Tolerations:                 node.kubernetes.io/not-ready:NoExecute op=Exists for 300s
+                             node.kubernetes.io/unreachable:NoExecute op=Exists for 300s
+Events:
+  Type    Reason          Age                From     Message
+  ----    ------          ----               ----     -------
+  Normal  SandboxChanged  13m (x2 over 13m)  kubelet  Pod sandbox changed, it will be killed and re-created.
+  Normal  Pulled          13m                kubelet  spec.containers{nginx}: Container image "nginx:alpine" already present on machine and can be accessed by the pod
+  Normal  Created         13m                kubelet  spec.containers{nginx}: Container created
+  Normal  Started         13m                kubelet  spec.containers{nginx}: Container started
+
+
+Name:             webserver-684bc54f86-htnqh
+Namespace:        default
+Priority:         0
+Service Account:  default
+Node:             minikube-m03/192.168.49.4
+Start Time:       Thu, 02 Apr 2026 10:48:02 -0400
+Labels:           app=webserver
+                  pod-template-hash=684bc54f86
+Annotations:      cni.projectcalico.org/containerID: 58d5f79849863d5d592b4aca4a5a1f6b982b4b2a8c5e80d539e54921681ee087
+                  cni.projectcalico.org/podIP: 10.244.151.15/32
+                  cni.projectcalico.org/podIPs: 10.244.151.15/32
+Status:           Running
+IP:               10.244.151.15
+IPs:
+  IP:           10.244.151.15
+Controlled By:  ReplicaSet/webserver-684bc54f86
+Containers:
+  nginx:
+    Container ID:   containerd://7c1e6d404808d5310c125db15e7396a28ec3c959a29928b1c233df734cd752cf
+    Image:          nginx:alpine
+    Image ID:       docker.io/library/nginx@sha256:e7257f1ef28ba17cf7c248cb8ccf6f0c6e0228ab9c315c152f9c203cd34cf6d1
+    Port:           80/TCP
+    Host Port:      0/TCP
+    State:          Running
+      Started:      Fri, 10 Apr 2026 09:13:24 -0400
+    Last State:     Terminated
+      Reason:       Unknown
+      Exit Code:    255
+      Started:      Thu, 09 Apr 2026 08:35:27 -0400
+      Finished:     Fri, 10 Apr 2026 09:12:21 -0400
+    Ready:          True
+    Restart Count:  4
+    Environment:    <none>
+    Mounts:
+      /var/run/secrets/kubernetes.io/serviceaccount from kube-api-access-m2pd2 (ro)
+Conditions:
+  Type                        Status
+  PodReadyToStartContainers   True
+  Initialized                 True
+  Ready                       True
+  ContainersReady             True
+  PodScheduled                True
+Volumes:
+  kube-api-access-m2pd2:
+    Type:                    Projected (a volume that contains injected data from multiple sources)
+    TokenExpirationSeconds:  3607
+    ConfigMapName:           kube-root-ca.crt
+    Optional:                false
+    DownwardAPI:             true
+QoS Class:                   BestEffort
+Node-Selectors:              <none>
+Tolerations:                 node.kubernetes.io/not-ready:NoExecute op=Exists for 300s
+                             node.kubernetes.io/unreachable:NoExecute op=Exists for 300s
+Events:
+  Type     Reason          Age                From             Message
+  ----     ------          ----               ----             -------
+  Warning  NodeNotReady    14m                node-controller  Node is not ready
+  Normal   SandboxChanged  12m (x2 over 13m)  kubelet          Pod sandbox changed, it will be killed and re-created.
+  Normal   Pulled          12m                kubelet          spec.containers{nginx}: Container image "nginx:alpine" already present on machine and can be accessed by the pod
+  Normal   Created         12m                kubelet          spec.containers{nginx}: Container created
+  Normal   Started         12m                kubelet          spec.containers{nginx}: Container started
+
+
+Name:             webserver-684bc54f86-t4xkw
+Namespace:        default
+Priority:         0
+Service Account:  default
+Node:             minikube/192.168.49.2
+Start Time:       Thu, 02 Apr 2026 10:48:02 -0400
+Labels:           app=webserver
+                  pod-template-hash=684bc54f86
+Annotations:      cni.projectcalico.org/containerID: b03774bc0e5d25743e3bbd03437085ac176e81309a01c68ef8c664866e9f50c5
+                  cni.projectcalico.org/podIP: 10.244.120.88/32
+                  cni.projectcalico.org/podIPs: 10.244.120.88/32
+Status:           Running
+IP:               10.244.120.88
+IPs:
+  IP:           10.244.120.88
+Controlled By:  ReplicaSet/webserver-684bc54f86
+Containers:
+  nginx:
+    Container ID:   containerd://70f9e3a91889bf2c6fe87821f44e795b359af914d1ef18b510d48a796f05e1c3
+    Image:          nginx:alpine
+    Image ID:       docker.io/library/nginx@sha256:e7257f1ef28ba17cf7c248cb8ccf6f0c6e0228ab9c315c152f9c203cd34cf6d1
+    Port:           80/TCP
+    Host Port:      0/TCP
+    State:          Running
+      Started:      Fri, 10 Apr 2026 09:11:49 -0400
+    Last State:     Terminated
+      Reason:       Unknown
+      Exit Code:    255
+      Started:      Thu, 09 Apr 2026 08:34:01 -0400
+      Finished:     Fri, 10 Apr 2026 09:10:59 -0400
+    Ready:          True
+    Restart Count:  4
+    Environment:    <none>
+    Mounts:
+      /var/run/secrets/kubernetes.io/serviceaccount from kube-api-access-lg2w8 (ro)
+Conditions:
+  Type                        Status
+  PodReadyToStartContainers   True
+  Initialized                 True
+  Ready                       True
+  ContainersReady             True
+  PodScheduled                True
+Volumes:
+  kube-api-access-lg2w8:
+    Type:                    Projected (a volume that contains injected data from multiple sources)
+    TokenExpirationSeconds:  3607
+    ConfigMapName:           kube-root-ca.crt
+    Optional:                false
+    DownwardAPI:             true
+QoS Class:                   BestEffort
+Node-Selectors:              <none>
+Tolerations:                 node.kubernetes.io/not-ready:NoExecute op=Exists for 300s
+                             node.kubernetes.io/unreachable:NoExecute op=Exists for 300s
+Events:
+  Type    Reason          Age                From     Message
+  ----    ------          ----               ----     -------
+  Normal  SandboxChanged  14m (x2 over 14m)  kubelet  Pod sandbox changed, it will be killed and re-created.
+  Normal  Pulled          14m                kubelet  spec.containers{nginx}: Container image "nginx:alpine" already present on machine and can be accessed by the pod
+  Normal  Created         14m                kubelet  spec.containers{nginx}: Container created
+  Normal  Started         14m                kubelet  spec.containers{nginx}: Container started
+
+
+  rob@rjmmx01:~$ kubectl get services
+NAME                  TYPE           CLUSTER-IP       EXTERNAL-IP      PORT(S)          AGE
+kubernetes            ClusterIP      10.96.0.1        <none>           443/TCP          8d
+kubernetes-bootcamp   LoadBalancer   10.96.109.81     <pending>        8080:31284/TCP   23h
+web-lb                LoadBalancer   10.103.207.139   10.103.207.139   8080:32430/TCP   7d22h
+web-service           NodePort       10.106.220.145   <none>           80:31623/TCP     7d22h
+rob@rjmmx01:~$ minikube service list
+┌──────────────────────┬────────────────────────────────────┬──────────────┬───────────────────────────┐
+│      NAMESPACE       │                NAME                │ TARGET PORT  │            URL            │
+├──────────────────────┼────────────────────────────────────┼──────────────┼───────────────────────────┤
+│ default              │ kubernetes                         │ No node port │                           │
+│ default              │ kubernetes-bootcamp                │ 8080         │ http://192.168.49.2:31284 │
+│ default              │ web-lb                             │ 8080         │ http://192.168.49.2:32430 │
+│ default              │ web-service                        │ 80           │ http://192.168.49.2:31623 │
+│ ingress-nginx        │ ingress-nginx-controller           │ http/80      │ http://192.168.49.2:30357 │
+│                      │                                    │ https/443    │ http://192.168.49.2:31429 │
+│ ingress-nginx        │ ingress-nginx-controller-admission │ No node port │                           │
+│ kube-system          │ kube-dns                           │ No node port │                           │
+│ kube-system          │ metrics-server                     │ No node port │                           │
+│ kubernetes-dashboard │ dashboard-metrics-scraper          │ No node port │                           │
+│ kubernetes-dashboard │ kubernetes-dashboard               │ No node port │                           │
+└──────────────────────┴────────────────────────────────────┴──────────────┴───────────────────────────┘
+rob@rjmmx01:~$ curl http://192.168.49.2:31284
+Hello Kubernetes bootcamp! | Running on: kubernetes-bootcamp-68cf47c9c8-86xhz | v=2
+rob@rjmmx01:~$ curl http://192.168.49.2:31284
+Hello Kubernetes bootcamp! | Running on: kubernetes-bootcamp-68cf47c9c8-rxmz2 | v=2
+rob@rjmmx01:~$ curl http://192.168.49.2:31284
+Hello Kubernetes bootcamp! | Running on: kubernetes-bootcamp-68cf47c9c8-rxmz2 | v=2
+rob@rjmmx01:~$ kubectl rollout status deployments/kubernetes-bootcamp
+deployment "kubernetes-bootcamp" successfully rolled out
+
+
+rob@rjmmx01:~$ kubectl describe pod kubernetes-bootcamp-68cf47c9c8-86xhz
+Name:             kubernetes-bootcamp-68cf47c9c8-86xhz
+Namespace:        default
+Priority:         0
+Service Account:  default
+Node:             minikube-m03/192.168.49.4
+Start Time:       Fri, 10 Apr 2026 09:29:26 -0400
+Labels:           app=kubernetes-bootcamp
+                  pod-template-hash=68cf47c9c8
+Annotations:      cni.projectcalico.org/containerID: 3981df4a3ee9833b7290de2ad95f4edc0def88cb683135cc7cebbf0ac972b2b1
+                  cni.projectcalico.org/podIP: 10.244.151.16/32
+                  cni.projectcalico.org/podIPs: 10.244.151.16/32
+Status:           Running
+IP:               10.244.151.16
+IPs:
+  IP:           10.244.151.16
+Controlled By:  ReplicaSet/kubernetes-bootcamp-68cf47c9c8
+Containers:
+  kubernetes-bootcamp:
+    Container ID:   containerd://592a6598d032cb909e96c593e6d080354f46cc095bc9aed885606bd3fc520826
+    Image:          docker.io/jocatalin/kubernetes-bootcamp:v2
+    Image ID:       docker.io/jocatalin/kubernetes-bootcamp@sha256:fb1a3ced00cecfc1f83f18ab5cd14199e30adc1b49aa4244f5d65ad3f5feb2a5
+    Port:           <none>
+    Host Port:      <none>
+    State:          Running
+      Started:      Fri, 10 Apr 2026 09:29:28 -0400
+    Ready:          True
+    Restart Count:  0
+    Environment:    <none>
+    Mounts:
+      /var/run/secrets/kubernetes.io/serviceaccount from kube-api-access-4wmrm (ro)
+Conditions:
+  Type                        Status
+  PodReadyToStartContainers   True
+  Initialized                 True
+  Ready                       True
+  ContainersReady             True
+  PodScheduled                True
+Volumes:
+  kube-api-access-4wmrm:
+    Type:                    Projected (a volume that contains injected data from multiple sources)
+    TokenExpirationSeconds:  3607
+    ConfigMapName:           kube-root-ca.crt
+    Optional:                false
+    DownwardAPI:             true
+QoS Class:                   BestEffort
+Node-Selectors:              <none>
+Tolerations:                 node.kubernetes.io/not-ready:NoExecute op=Exists for 300s
+                             node.kubernetes.io/unreachable:NoExecute op=Exists for 300s
+Events:
+  Type    Reason     Age    From               Message
+  ----    ------     ----   ----               -------
+  Normal  Scheduled  3m32s  default-scheduler  Successfully assigned default/kubernetes-bootcamp-68cf47c9c8-86xhz to minikube-m03
+  Normal  Pulling    3m32s  kubelet            spec.containers{kubernetes-bootcamp}: Pulling image "docker.io/jocatalin/kubernetes-bootcamp:v2"
+  Normal  Pulled     3m30s  kubelet            spec.containers{kubernetes-bootcamp}: Successfully pulled image "docker.io/jocatalin/kubernetes-bootcamp:v2" in 1.35s (1.35s including waiting). Image size: 83642966 bytes.
+  Normal  Created    3m30s  kubelet            spec.containers{kubernetes-bootcamp}: Container created
+  Normal  Started    3m30s  kubelet            spec.containers{kubernetes-bootcamp}: Container started
+rob@rjmmx01:~$
+
+rob@rjmmx01:~$ kubectl get pod kubernetes-bootcamp-68cf47c9c8-86xhz -o jsonpath='{.spec.containers[*].image}{"\n"}'
+docker.io/jocatalin/kubernetes-bootcamp:v2
+
+
+rob@rjmmx01:~$ for pod in $(kubectl get pod -l app=kubernetes-bootcamp | awk '/kubernetes/ {print $1}')
+> do
+> echo -n "${pod}: "
+> kubectl get pod kubernetes-bootcamp-68cf47c9c8-86xhz -o jsonpath='{.spec.containers[*].image}{"\n"}'
+> done
+kubernetes-bootcamp-68cf47c9c8-86xhz: docker.io/jocatalin/kubernetes-bootcamp:v2
+kubernetes-bootcamp-68cf47c9c8-rxmz2: docker.io/jocatalin/kubernetes-bootcamp:v2
+
+
+Use a bogus image to do a rollback:
+
+rob@rjmmx01:~$ kubectl set image deployments/kubernetes-bootcamp kubernetes-bootcamp=gcr.io/google-samples/kubernetes-bootcamp:v10
+deployment.apps/kubernetes-bootcamp image updated
+rob@rjmmx01:~$ kubectl get pod
+NAME                                   READY   STATUS             RESTARTS      AGE
+kubernetes-bootcamp-68cf47c9c8-86xhz   1/1     Running            0             17m
+kubernetes-bootcamp-68cf47c9c8-rxmz2   1/1     Running            0             17m
+kubernetes-bootcamp-845bc89d75-pwbks   0/1     ImagePullBackOff   0             12s
+webserver-684bc54f86-flwz2             1/1     Running            4 (35m ago)   7d22h
+webserver-684bc54f86-htnqh             1/1     Running            4 (34m ago)   7d22h
+webserver-684bc54f86-t4xkw             1/1     Running            4 (35m ago)   7d22h
+
+
+rob@rjmmx01:~$ kubectl rollout undo deployments/kubernetes-bootcamp
+deployment.apps/kubernetes-bootcamp rolled back
+rob@rjmmx01:~$ kubectl get pod
+NAME                                   READY   STATUS    RESTARTS      AGE
+kubernetes-bootcamp-68cf47c9c8-86xhz   1/1     Running   0             18m
+kubernetes-bootcamp-68cf47c9c8-rxmz2   1/1     Running   0             18m
+webserver-684bc54f86-flwz2             1/1     Running   4 (36m ago)   7d22h
+webserver-684bc54f86-htnqh             1/1     Running   4 (35m ago)   7d22h
+webserver-684bc54f86-t4xkw             1/1     Running   4 (36m ago)   7d22h
+
+
+rob@rjmmx01:~$ kubectl create configmap sport --from-literal=sport=football
+configmap/sport created
+
+Also see my file: deployment-with-configmap-as-volume.yaml in minikube
+
+rob@rjmmx01:~$ kubectl apply -f https://k8s.io/examples/deployments/deployment-with-configmap-as-volume.yaml
+deployment.apps/configmap-volume created
+rob@rjmmx01:~$ kubectl get pods --selector=app.kubernetes.io/name=configmap-volume
+NAME                               READY   STATUS    RESTARTS   AGE
+configmap-volume-fcdb6f4f6-c2csh   1/1     Running   0          22s
+configmap-volume-fcdb6f4f6-hjlh9   1/1     Running   0          22s
+configmap-volume-fcdb6f4f6-z2cl2   1/1     Running   0          22s
+
+rob@rjmmx01:~$ kubectl logs deployments/configmap-volume
+Found 3 pods, using pod/configmap-volume-fcdb6f4f6-hjlh9
+Fri Apr 10 14:05:37 UTC 2026 My preferred sport is football
+Fri Apr 10 14:05:47 UTC 2026 My preferred sport is football
+Fri Apr 10 14:05:57 UTC 2026 My preferred sport is football
+Fri Apr 10 14:06:07 UTC 2026 My preferred sport is football
+Fri Apr 10 14:06:17 UTC 2026 My preferred sport is football
+Fri Apr 10 14:06:27 UTC 2026 My preferred sport is football
+Fri Apr 10 14:06:37 UTC 2026 My preferred sport is football
+Fri Apr 10 14:06:47 UTC 2026 My preferred sport is football
+Fri Apr 10 14:06:57 UTC 2026 My preferred sport is football
+Fri Apr 10 14:07:07 UTC 2026 My preferred sport is football
+Fri Apr 10 14:07:17 UTC 2026 My preferred sport is football
+Fri Apr 10 14:07:27 UTC 2026 My preferred sport is football
+Fri Apr 10 14:07:37 UTC 2026 My preferred sport is football
+Fri Apr 10 14:07:47 UTC 2026 My preferred sport is football
+Fri Apr 10 14:07:57 UTC 2026 My preferred sport is football
+Fri Apr 10 14:08:07 UTC 2026 My preferred sport is football
+
+
+Changed football to cricket
+rob@rjmmx01:~$ kubectl edit configmap sport
+configmap/sport edited
+
+After a while:
+
+rob@rjmmx01:~$ kubectl logs -f deployments/configmap-volume
+Found 3 pods, using pod/configmap-volume-fcdb6f4f6-hjlh9
+Fri Apr 10 14:05:37 UTC 2026 My preferred sport is football
+Fri Apr 10 14:05:47 UTC 2026 My preferred sport is football
+Fri Apr 10 14:05:57 UTC 2026 My preferred sport is football
+Fri Apr 10 14:06:07 UTC 2026 My preferred sport is football
+Fri Apr 10 14:06:17 UTC 2026 My preferred sport is football
+Fri Apr 10 14:06:27 UTC 2026 My preferred sport is football
+Fri Apr 10 14:06:37 UTC 2026 My preferred sport is football
+Fri Apr 10 14:06:47 UTC 2026 My preferred sport is football
+Fri Apr 10 14:06:57 UTC 2026 My preferred sport is football
+Fri Apr 10 14:07:07 UTC 2026 My preferred sport is football
+Fri Apr 10 14:07:17 UTC 2026 My preferred sport is football
+Fri Apr 10 14:07:27 UTC 2026 My preferred sport is football
+Fri Apr 10 14:07:37 UTC 2026 My preferred sport is football
+Fri Apr 10 14:07:47 UTC 2026 My preferred sport is football
+Fri Apr 10 14:07:57 UTC 2026 My preferred sport is football
+Fri Apr 10 14:08:07 UTC 2026 My preferred sport is football
+Fri Apr 10 14:08:17 UTC 2026 My preferred sport is football
+Fri Apr 10 14:08:27 UTC 2026 My preferred sport is football
+Fri Apr 10 14:08:37 UTC 2026 My preferred sport is football
+Fri Apr 10 14:08:47 UTC 2026 My preferred sport is football
+Fri Apr 10 14:08:57 UTC 2026 My preferred sport is football
+Fri Apr 10 14:09:07 UTC 2026 My preferred sport is football
+Fri Apr 10 14:09:17 UTC 2026 My preferred sport is football
+Fri Apr 10 14:09:27 UTC 2026 My preferred sport is football
+Fri Apr 10 14:09:37 UTC 2026 My preferred sport is football
+Fri Apr 10 14:09:47 UTC 2026 My preferred sport is football
+Fri Apr 10 14:09:57 UTC 2026 My preferred sport is football
+Fri Apr 10 14:10:07 UTC 2026 My preferred sport is football
+Fri Apr 10 14:10:17 UTC 2026 My preferred sport is football
+Fri Apr 10 14:10:27 UTC 2026 My preferred sport is cricket
+Fri Apr 10 14:10:37 UTC 2026 My preferred sport is cricket
+Fri Apr 10 14:10:47 UTC 2026 My preferred sport is cricket
+Fri Apr 10 14:10:57 UTC 2026 My preferred sport is cricket
+
+
+rob@rjmmx01:~$ kubectl create configmap fruits --from-literal=fruits=apples
+configmap/fruits created
+
+Also see my file: deployment-with-configmap-as-envvar.yaml in minikube
+
+rob@rjmmx01:~$ kubectl apply -f https://k8s.io/examples/deployments/deployment-with-configmap-as-envvar.yaml
+deployment.apps/configmap-env-var created
+rob@rjmmx01:~$ kubectl get pods --selector=app.kubernetes.io/name=configmap-env-var
+NAME                                 READY   STATUS    RESTARTS   AGE
+configmap-env-var-5d6c54d5cc-5lpgx   1/1     Running   0          17s
+configmap-env-var-5d6c54d5cc-pmjwz   1/1     Running   0          17s
+configmap-env-var-5d6c54d5cc-zwvdm   1/1     Running   0          17s
+
+
+rob@rjmmx01:~$ kubectl logs deployment/configmap-env-var
+Found 3 pods, using pod/configmap-env-var-5d6c54d5cc-5lpgx
+Fri Apr 10 14:17:27 UTC 2026 The basket is full of apples
+Fri Apr 10 14:17:37 UTC 2026 The basket is full of apples
+Fri Apr 10 14:17:47 UTC 2026 The basket is full of apples
+Fri Apr 10 14:17:57 UTC 2026 The basket is full of apples
+Fri Apr 10 14:18:07 UTC 2026 The basket is full of apples
+Fri Apr 10 14:18:17 UTC 2026 The basket is full of apples
+Fri Apr 10 14:18:27 UTC 2026 The basket is full of apples
+Fri Apr 10 14:18:37 UTC 2026 The basket is full of apples
+Fri Apr 10 14:18:47 UTC 2026 The basket is full of apples
+Fri Apr 10 14:18:57 UTC 2026 The basket is full of apples
+Fri Apr 10 14:19:07 UTC 2026 The basket is full of apples
+Fri Apr 10 14:19:17 UTC 2026 The basket is full of apples
+rob@rjmmx01:~$ kubectl edit configmap fruits
+configmap/fruits edited
+
+Changed apples to mangoes
+
+
+rob@rjmmx01:~$ kubectl logs deployment/configmap-env-var | tail -10
+Found 3 pods, using pod/configmap-env-var-5d6c54d5cc-5lpgx
+Fri Apr 10 14:22:48 UTC 2026 The basket is full of apples
+Fri Apr 10 14:22:58 UTC 2026 The basket is full of apples
+Fri Apr 10 14:23:08 UTC 2026 The basket is full of apples
+Fri Apr 10 14:23:18 UTC 2026 The basket is full of apples
+Fri Apr 10 14:23:28 UTC 2026 The basket is full of apples
+Fri Apr 10 14:23:38 UTC 2026 The basket is full of apples
+Fri Apr 10 14:23:48 UTC 2026 The basket is full of apples
+Fri Apr 10 14:23:58 UTC 2026 The basket is full of apples
+Fri Apr 10 14:24:08 UTC 2026 The basket is full of apples
+Fri Apr 10 14:24:18 UTC 2026 The basket is full of apples
+
+Does not change because:
+
+Although the value of the key inside the ConfigMap has changed, the environment variable in the Pod still shows the earlier value. This is because
+environment variables for a process running inside a Pod are not updated when the source data changes; if you wanted to force an update, you would
+need to have Kubernetes replace your existing Pods. The new Pods would then run with the updated information.
+
+To fix that, do a rollout restart:
+
+rob@rjmmx01:~$ kubectl rollout restart deployment configmap-env-var
+deployment.apps/configmap-env-var restarted
+rob@rjmmx01:~$ kubectl rollout status deployment configmap-env-var --watch=true
+deployment "configmap-env-var" successfully rolled out
+rob@rjmmx01:~$ kubectl get deployment configmap-env-var
+NAME                READY   UP-TO-DATE   AVAILABLE   AGE
+configmap-env-var   3/3     3            3           8m52s
+rob@rjmmx01:~$ kubectl get pods --selector=app.kubernetes.io/name=configmap-env-var
+NAME                                 READY   STATUS    RESTARTS   AGE
+configmap-env-var-595bd5b789-cvkgn   1/1     Running   0          56s
+configmap-env-var-595bd5b789-n5zw5   1/1     Running   0          54s
+configmap-env-var-595bd5b789-qhphr   1/1     Running   0          55s
+rob@rjmmx01:~$ kubectl logs deployment/configmap-env-var
+Found 3 pods, using pod/configmap-env-var-595bd5b789-cvkgn
+Fri Apr 10 14:25:50 UTC 2026 The basket is full of mangoes
+Fri Apr 10 14:26:00 UTC 2026 The basket is full of mangoes
+Fri Apr 10 14:26:10 UTC 2026 The basket is full of mangoes
+Fri Apr 10 14:26:20 UTC 2026 The basket is full of mangoes
+Fri Apr 10 14:26:30 UTC 2026 The basket is full of mangoes
+Fri Apr 10 14:26:40 UTC 2026 The basket is full of mangoes
+Fri Apr 10 14:26:50 UTC 2026 The basket is full of mangoes
+Fri Apr 10 14:27:00 UTC 2026 The basket is full of mangoes
+
+
+Update configuration via a ConfigMap in a multi-container Pod
+
+rob@rjmmx01:~$ kubectl create configmap color --from-literal=color=red
+configmap/color created
+rob@rjmmx01:~$ kubectl apply -f https://k8s.io/examples/deployments/deployment-with-configmap-two-containers.yaml
+deployment.apps/configmap-two-containers created
+rob@rjmmx01:~$ kubectl get pods --selector=app.kubernetes.io/name=configmap-two-containers
+NAME                                        READY   STATUS    RESTARTS   AGE
+configmap-two-containers-79b4c6d998-g994s   2/2     Running   0          13s
+configmap-two-containers-79b4c6d998-qrmfr   2/2     Running   0          13s
+configmap-two-containers-79b4c6d998-rslt7   2/2     Running   0          13s
+rob@rjmmx01:~$ kubectl expose deployment configmap-two-containers --name=configmap-service --port=8080 --target-port=80
+service/configmap-service exposed
+rob@rjmmx01:~$ kubectl port-forward service/configmap-service 8080:8080 &
+[1] 1414093
+rob@rjmmx01:~$ Forwarding from 127.0.0.1:8080 -> 80
+Forwarding from [::1]:8080 -> 80
+
+rob@rjmmx01:~$ curl http://localhost:8080
+Handling connection for 8080
+Sat Apr 11 03:22:56 UTC 2026 My preferred color is red
+
+Edit the configmap and change the color to blue
+
+rob@rjmmx01:~$ kubectl edit configmap color
+configmap/color edited
+rob@rjmmx01:~$ while true; do curl --connect-timeout 7.5 http://localhost:8080; sleep 10; done
+Handling connection for 8080
+Sat Apr 11 03:24:07 UTC 2026 My preferred color is red
+Handling connection for 8080
+Sat Apr 11 03:24:17 UTC 2026 My preferred color is red
+Handling connection for 8080
+Sat Apr 11 03:24:27 UTC 2026 My preferred color is blue
+Handling connection for 8080
+Sat Apr 11 03:24:37 UTC 2026 My preferred color is blue
+
+
+Update configuration via a ConfigMap in a Pod possessing a sidecar container
+
+The above scenario can be replicated by using a Sidecar Container as a helper container to write the HTML file.
+As a Sidecar Container is conceptually an Init Container, it is guaranteed to start before the main web server container.
+This ensures that the HTML file is always available when the web server is ready to serve it.
+
+rob@rjmmx01:~$ kubectl apply -f https://k8s.io/examples/deployments/deployment-with-configmap-and-sidecar-container.yaml
+deployment.apps/configmap-sidecar-container created
+rob@rjmmx01:~$ kubectl get pods --selector=app.kubernetes.io/name=configmap-sidecar-container
+NAME                                           READY   STATUS    RESTARTS   AGE
+configmap-sidecar-container-6fd8cc646f-8qtd5   2/2     Running   0          23s
+configmap-sidecar-container-6fd8cc646f-hpvhs   2/2     Running   0          23s
+configmap-sidecar-container-6fd8cc646f-vbgdq   2/2     Running   0          23s
+rob@rjmmx01:~$ kubectl get configmap
+NAME               DATA   AGE
+color              1      10m
+fruits             1      13h
+kube-root-ca.crt   1      9d
+sport              1      13h
+rob@rjmmx01:~$ kubectl expose deployment configmap-sidecar-container --name=configmap-sidecar-service --port=8081 --target-port=80
+service/configmap-sidecar-service exposed
+rob@rjmmx01:~$ jobs
+[1]+  Running                 kubectl port-forward service/configmap-service 8080:8080 &
+rob@rjmmx01:~$ fg
+kubectl port-forward service/configmap-service 8080:8080
+^Crob@rjmmx01:~$ kubectl port-forward service/configmap-sidecar-service 8081:8081 &
+[1] 1429750
+rob@rjmmx01:~$ Forwarding from 127.0.0.1:8081 -> 80
+Forwarding from [::1]:8081 -> 80
+curl http://loccurl http://localhost:8081
+Handling connection for 8081
+Sat Apr 11 03:31:08 UTC 2026 My preferred color is blue
+rob@rjmmx01:~$ kubectl edit configmap color
+configmap/color edited
+rob@rjmmx01:~$ while true; do curl --connect-timeout 7.5 http://localhost:8081; sleep 10; done
+Handling connection for 8081
+Sat Apr 11 03:31:58 UTC 2026 My preferred color is blue
+Handling connection for 8081
+Sat Apr 11 03:32:08 UTC 2026 My preferred color is blue
+Handling connection for 8081
+Sat Apr 11 03:32:18 UTC 2026 My preferred color is blue
+Handling connection for 8081
+Sat Apr 11 03:32:28 UTC 2026 My preferred color is blue
+Handling connection for 8081
+Sat Apr 11 03:32:38 UTC 2026 My preferred color is blue
+Handling connection for 8081
+Sat Apr 11 03:32:48 UTC 2026 My preferred color is blue
+Handling connection for 8081
+Sat Apr 11 03:32:58 UTC 2026 My preferred color is blue
+Handling connection for 8081
+Sat Apr 11 03:33:08 UTC 2026 My preferred color is green
+Handling connection for 8081
+Sat Apr 11 03:33:18 UTC 2026 My preferred color is green
+^C
+rob@rjmmx01:~$
+
+
+Update configuration via an immutable ConfigMap that is mounted as a volume
+Note:
+
+Immutable ConfigMaps are especially used for configuration that is constant and is not expected to change over time. Marking a ConfigMap
+as immutable allows a performance improvement where the kubelet does not watch for changes.
+
+If you do need to make a change, you should plan to either:
+
+    change the name of the ConfigMap, and switch to running Pods that reference the new name
+    replace all the nodes in your cluster that have previously run a Pod that used the old value
+    restart the kubelet on any node where the kubelet previously loaded the old ConfigMap
+
+
+rob@rjmmx01:~$ kubectl apply -f https://k8s.io/examples/configmap/immutable-configmap.yaml
+configmap/company-name-20150801 created
+rob@rjmmx01:~$ kubectl apply -f https://k8s.io/examples/deployments/deployment-with-immutable-configmap-as-volume.yaml
+deployment.apps/immutable-configmap-volume created
+rob@rjmmx01:~$ kubectl get pods --selector=app.kubernetes.io/name=immutable-configmap-volume
+NAME                                          READY   STATUS    RESTARTS   AGE
+immutable-configmap-volume-785477465f-gqjqt   1/1     Running   0          14s
+immutable-configmap-volume-785477465f-hl8lj   1/1     Running   0          14s
+immutable-configmap-volume-785477465f-krqm2   1/1     Running   0          14s
+rob@rjmmx01:~$ kubectl logs deployments/immutable-configmap-volume
+Found 3 pods, using pod/immutable-configmap-volume-785477465f-gqjqt
+Sat Apr 11 03:43:41 UTC 2026 The name of the company is ACME, Inc.
+Sat Apr 11 03:43:51 UTC 2026 The name of the company is ACME, Inc.
+Sat Apr 11 03:44:01 UTC 2026 The name of the company is ACME, Inc.
+Sat Apr 11 03:44:11 UTC 2026 The name of the company is ACME, Inc.
+
+Note:
+Once a ConfigMap is marked as immutable, it is not possible to revert this change nor to mutate the contents of the data or the binaryData field.
+In order to modify the behavior of the Pods that use this configuration, you will create a new immutable ConfigMap and edit the Deployment to define
+a slightly different pod template, referencing the new ConfigMap.
+
+Create the new configmap:
+
+rob@rjmmx01:~$ kubectl apply -f https://k8s.io/examples/configmap/new-immutable-configmap.yaml
+configmap/company-name-20240312 created
+rob@rjmmx01:~$ kubectl get configmap
+NAME                    DATA   AGE
+color                   1      28m
+company-name-20150801   1      10m
+company-name-20240312   1      26s
+fruits                  1      13h
+kube-root-ca.crt        1      9d
+sport                   1      13h
+
+Edit the deployment to change the volume to use the new configmap:
+
+rob@rjmmx01:~$ kubectl edit deployment immutable-configmap-volume
+deployment.apps/immutable-configmap-volume edited
+
+Old deployment terminating, new starting
+
+rob@rjmmx01:~$ kubectl get pods --selector=app.kubernetes.io/name=immutable-configmap-volume
+NAME                                          READY   STATUS        RESTARTS   AGE
+immutable-configmap-volume-649c9f784d-4cdgf   1/1     Running       0          23s
+immutable-configmap-volume-649c9f784d-jrzfx   1/1     Running       0          24s
+immutable-configmap-volume-649c9f784d-r97wj   1/1     Running       0          26s
+immutable-configmap-volume-785477465f-gqjqt   1/1     Terminating   0          6m31s
+immutable-configmap-volume-785477465f-hl8lj   1/1     Terminating   0          6m31s
+immutable-configmap-volume-785477465f-krqm2   1/1     Terminating   0          6m31s
+rob@rjmmx01:~$ kubectl logs deployment/immutable-configmap-volume
+Found 3 pods, using pod/immutable-configmap-volume-649c9f784d-r97wj
+Sat Apr 11 03:49:46 UTC 2026 The name of the company is Fiktivesunternehmen GmbH
+Sat Apr 11 03:49:56 UTC 2026 The name of the company is Fiktivesunternehmen GmbH
+Sat Apr 11 03:50:06 UTC 2026 The name of the company is Fiktivesunternehmen GmbH
+Sat Apr 11 03:50:16 UTC 2026 The name of the company is Fiktivesunternehmen GmbH
+Sat Apr 11 03:50:26 UTC 2026 The name of the company is Fiktivesunternehmen GmbH
+Sat Apr 11 03:50:36 UTC 2026 The name of the company is Fiktivesunternehmen GmbH
+
